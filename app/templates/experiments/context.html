@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Instructions</title>
+
+  <!-- Load libraries -->
+  <script src="../../static/lib/jquery-3.3.1/jquery.min.js"></script>
+  <script src="../../static/lib/jspsych-6.3.1/jspsych.js"></script>
+
+  <!-- Load NivTurk plug-ins -->
+  <script src="../../static/js/nivturk-plugins.js" type="text/javascript"></script>
+
+  <!-- Load jsPsych plug-ins -->
+  <script src="../../static/js/jspsych-survey-demo.js"></script>
+  <script src="../../static/js/jspsych-survey-context.js"></script>
+  <script src="../../static/js/jspsych-mental-health-alert.js"></script>
+  <script src="../../static/lib/jspsych-6.3.1/plugins/jspsych-instructions.js"></script>
+  <script src="../../static/js/jspsych-survey-multi-choice-sam-modified.js"></script>
+
+
+  <!-- Load CSS styles -->
+  <link href="../../static/lib/jspsych-6.3.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+
+</head>
+<body></body>
+<script>
+
+  // Display alert message on back/refresh.
+  // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+  function verify_unload(e){
+    e.preventDefault();
+    (e || window.event).returnValue = null;
+    return null;
+  };
+  window.addEventListener("beforeunload", verify_unload);
+
+  // Define global variables.
+  var low_quality = false;
+
+
+  var recontact = {
+    type: 'survey-multi-choice',
+    questions: [
+      {
+        prompt: "Would you like to be re-contacted for future studies?", 
+		    name: 'recontact', 
+		    options: ['Yes', 'No'], 
+        horizontal: true,
+		    required: true
+      },
+    ],
+    data:{item:"recontact"},
+  }
+
+  var NDA = {
+    type: 'survey-multi-choice',
+    questions: [
+      {
+        prompt: "Would you like to opt out of sharing your deidentified study data with NDA?", 
+		    name: 'NDA', 
+		    options: ['Yes', 'No'], 
+        horizontal: true,
+		    required: true
+      },
+    ],
+    data:{item:"NDA"},
+  }
+
+  // Define welcome screen.
+  var WELCOME = {
+    type: 'instructions',
+    pages: [
+      `<p>Welcome!<br>
+        <p>You will complete three computer tasks, which should take around 45-55 minutes in total.</p>
+        <p>The estimated times are average completion times. People might vary in how long they take for completion.</p>
+        <p>You should complete the tasks in one sitting. So, please start them when you have sufficient time and will not be disturbed.<br>You can of course take short breaks <b>in between</b> the games.</p>
+      `,
+      `<p><b>Your time and effort are valuable:</b></p><p>To make sure data from your performance on these games can be used for research, please take a moment to review these important notes:</p>
+      <ul style='margin:80px 200px 80px 200px; text-align:left'>
+        <li style='margin:10px'>During the study, please <b>do not</b> use the <b>BACK</b> or <b>REFRESH</b> buttons. If you press one of these buttons, the experiment may restart and you will lose all of your progress.</li>
+        <li style='margin:10px'>Please make sure that you complete this study on your own and without help from others, without any multitasking, and ideally in a quiet room.</li>
+        <li style='margin:10px'>We value your attention and time. As such, we encourage you not to rush during the study. If you begin to get tired or bored, we encourage you to take a break <b>between</b> games.</li>
+      </ul>
+      `,
+      "<p>If you run into any problems during the study, please message us on Prolific.</p><p>We will get back to you ASAP.</p>",
+      "<p>We recognize that our tasks can sometimes be challenging, if you encounter any frustrations that hinder your progress in the study, please don't hesitate to inform us. We'll explore options to help you move forward.</p>",
+      "<p>We will now get started with the tasks. <b>Once you move on to the next page, please do not close this webpage/tab until you see explicit instructions at the end of this part of the study</b>.</p><p>Thank you and have fun!</p>"
+
+    ],
+    show_clickable_nav: true,
+    button_label_previous: "Prev",
+    button_label_next: "Next",
+  }
+
+  var headphone = {
+    type: 'survey-multi-choice',
+    questions: [
+      {
+        prompt: "Do you have a headphone with you right now?", 
+		    name: 'headphone', 
+		    options: ['Yes', 'No'], 
+        horizontal: true,
+		    required: true
+      },
+    ],
+    data:{item:"headphone"},
+  }
+
+  var no_headphone_instruction = {
+      type: "instructions",
+      pages: [
+          `<br><p><b>Please continue the study later once you have headphone ready. You can close the tab now.</b></p><br>`,
+      ],
+      key_forward: 'j',
+      post_trial_gap: 1000,
+  }
+
+  var no_headphone = {
+      timeline: [no_headphone_instruction],
+      conditional_function: function(){
+        // get the data from the previous trial
+        const [data] = jsPsych.data.get().filter({item: 'headphone'}).values();
+        console.log("Data from previous trial:", data);
+        const responsesObj = JSON.parse(data.responses);
+        const responseValue = responsesObj.headphone;
+        console.log("Response for 'headphone':", responseValue);
+        //may need to replace Q0 here in the future
+        if(responseValue === 'No'){
+            console.log("Conditional met: Show ptsd_2nd");
+            return true;
+        } else {
+            console.log("Conditional not met: Don't show ptsd_2nd");
+            return false;
+        }
+    }
+  }
+
+  var TriggerWarning = {
+		type: "instructions",
+		pages:
+			[`<h1 style='color:red'>Trigger Warning! </h1>
+       <p>This set of games involves being exposed to <b>loud screams</b> which may be startling and unpleasant for some.<br>`+
+
+       `<br><p><b>If this may be intolerable for you, please do not proceed with this task. Otherwise, please click 'Next' to proceed. </b></p><br>`,
+
+			 `<p>If you are interested in learning more about mental health or in speaking to a professional,
+       <br>we have provided some resources on <a href=https://nivlab.princeton.edu/mental-health-resources target='_blank'>our website</a>.</p>
+			 <p>These mental health resources will also be shown on the next page.
+        In case you may find it helpful, we encourage you to take a screenshot of the next page for future reference.</p>`
+			],
+		key_forward: 'j',
+		post_trial_gap: 1000,
+		show_clickable_nav: true,
+	}
+
+  var mhresources = {
+    type: "mental-health-alert",
+  }
+
+  // Define demographics form.
+  var CONTEXT = {
+    type: 'survey-context',
+    data: {survey: 'context'}
+  }
+
+  // Initialize timeline.
+  var timeline = [];
+  timeline = timeline.concat(recontact);
+  timeline = timeline.concat(NDA);
+  timeline = timeline.concat(WELCOME);
+  // timeline = timeline.concat(headphone);
+  // timeline = timeline.concat(no_headphone);
+  timeline = timeline.concat(TriggerWarning);
+  timeline = timeline.concat(mhresources);
+  timeline = timeline.concat(CONTEXT);
+
+  jsPsych.init({
+    timeline: timeline,
+    on_finish: function() {
+
+      // Remove requirement to verify redirect
+      window.removeEventListener("beforeunload", verify_unload);
+
+      // Add interactions to the data variable
+      var interaction_data = jsPsych.data.getInteractionData();
+      jsPsych.data.get().addToLast({interactions: interaction_data.count()});
+
+      // Display jsPsych data in viewport.
+      // jsPsych.data.displayData();
+
+      // Save complete dataset to disk.
+      on_success("context");
+
+    }
+  })
+
+</script>
+</html>

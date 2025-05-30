@@ -1,9 +1,11 @@
 import os, sys, re, configparser, warnings
+from collections import OrderedDict
 from flask import (Flask, redirect, render_template, request, session, url_for)
-from app import consent, alert, experiment, complete, error
+from app import consent, experiment, complete, error, alert
+from .db import initialize_db
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.2.6'
+__version__ = 'nivturk-sqlite3-battery'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -17,10 +19,14 @@ data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
 if not os.path.isdir(data_dir): os.makedirs(data_dir)
 meta_dir = os.path.join(ROOT_DIR, cfg['IO']['METADATA'])
 if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
-incomplete_dir = os.path.join(ROOT_DIR, cfg['IO']['INCOMPLETE'])
-if not os.path.isdir(incomplete_dir): os.makedirs(incomplete_dir)
+# incomplete_dir = os.path.join(ROOT_DIR, cfg['IO']['INCOMPLETE'])
+# if not os.path.isdir(incomplete_dir): os.makedirs(incomplete_dir)
 reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
 if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
+
+## Ensure database exists.
+db_path = os.path.join(ROOT_DIR, cfg['IO']['DB'])
+if not os.path.isfile(db_path): initialize_db(db_path)
 
 ## Check Flask mode; if debug mode, clear session variable.
 debug = cfg['FLASK'].getboolean('DEBUG')
@@ -32,8 +38,12 @@ secret_key = cfg['FLASK']['SECRET_KEY']
 if secret_key == "PLEASE_CHANGE_THIS":
     warnings.warn("WARNING: Flask password is currently default. This should be changed prior to production.")
 
-## Check restart mode; if true, participants can restart experiment.
-allow_restart = cfg['FLASK'].getboolean('ALLOW_RESTART')
+## CUSTOM: Load mapping.
+mapping = dict()
+with open(os.path.join(ROOT_DIR, 'mapping.txt'), 'r') as f:
+    for line in f.readlines():
+        k, v = line.strip().split(',')
+        mapping[k] = v
 
 ## Initialize Flask application.
 app = Flask(__name__)
@@ -41,46 +51,71 @@ app.secret_key = secret_key
 
 ## Apply blueprints to the application.
 app.register_blueprint(consent.bp)
-app.register_blueprint(alert.bp)
 app.register_blueprint(experiment.bp)
 app.register_blueprint(complete.bp)
 app.register_blueprint(error.bp)
+app.register_blueprint(alert.bp)
 
 ## Define root node.
 @app.route('/')
 def index():
 
     ## Debug mode: clear session.
-    if debug:
-        session.clear()
+    ##if debug:
+        ##session.clear()
+    session.clear()
 
     ## Store directories in session object.
     session['data'] = data_dir
     session['metadata'] = meta_dir
-    session['incomplete'] = incomplete_dir
+    # session['incomplete'] = incomplete_dir
     session['reject'] = reject_dir
-    session['allow_restart'] = allow_restart
+    session['db_path'] = db_path
 
     ## Record incoming metadata.
-    info = dict(
+    info = OrderedDict(
         workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata
         assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata
         hitId        = request.args.get('STUDY_ID'),        # Prolific metadata
-        subId        = gen_code(24),                        # NivTurk metadata
         address      = request.remote_addr,                 # NivTurk metadata
-        user_agent   = request.user_agent.string,           # User metadata
+        browser      = request.user_agent.browser,          # User metadata
+        platform     = request.user_agent.platform,         # User metadata
+        version      = request.user_agent.version,          # User metadata
         code_success = cfg['PROLIFIC'].get('CODE_SUCCESS', gen_code(8).upper()),
         code_reject  = cfg['PROLIFIC'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
-    ## Case 1: workerId absent form URL.
+    ## Define subject id.
+    info['subId'] = mapping.get(info['workerId'], gen_code(24))
+    print(info['subId'])
+
+    # checkpid = True
+
+    ## Case 1: workerId absent.
     if info['workerId'] is None:
 
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('error.error', errornum=1000))
+    # else:
+    #     if checkpid:
+    #         ## check PID is correct format
+    #         studyinfo = info['workerId'][:10]
+    #         subjectstr = info['workerId'][10:34]
+    #         psudorandend = info['workehttp://<ip-address>:9000/?PROLIFIC_PID=<xxx>rId'][34:]
 
-    ## Case 2: mobile / tablet / game console user.
-    elif any([device in info['user_agent'].lower() for device in ['mobile','android','iphone','ipad','kindle','nintendo','playstation','xbox']]):
+    #         if (len(studyinfo) == 10) and (len(subjectstr) == 24) and (len(psudorandend) == 4):
+    #             if (psudorandend[0] == studyinfo[0] and psudorandend[1] == studyinfo[-1] 
+    #             and psudorandend[2] == subjectstr[0] and psudorandend[3] == subjectstr[-1]):
+    #                 pass
+    #             else:
+    #                 print("PID did not pass end check")
+    #                 return redirect(url_for('error.error', errornum=1008))
+    #         else:
+    #             print("PID did not pass length check")
+    #             return redirect(url_for('error.error', errornum=1008))
+
+    ## Case 2: mobile / tablet user.
+    elif info['platform'] in ['android','iphone','ipad','wii']:
 
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
@@ -91,24 +126,13 @@ def index():
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 4: repeat visit, manually changed workerId.
-    elif 'workerId' in session and session['workerId'] != info['workerId']:
-
-        ## Update metadata.
-        session['ERROR'] = '1005: workerId tampering detected.'
-        session['complete'] = 'error'
-        write_metadata(session, ['ERROR','complete'], 'a')
-
-        ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1005))
-
-    ## Case 5: repeat visit, preexisting activity.
+    ## Case 4: repeat visit, preexisting activity.
     elif 'workerId' in session:
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
 
-    ## Case 6: repeat visit, preexisting log but no session data.
+    ## Case 5: repeat visit, preexisting log but no session data.
     elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
 
         ## Parse log file.
@@ -120,13 +144,9 @@ def index():
 
         ## Check for previous consent.
         consent = re.search('consent\t(.*)\n', logs)
-        if consent and consent.group(1) == 'True': info['consent'] = True       # consent = true
-        elif consent and consent.group(1) == 'False': info['consent'] = False   # consent = false
-        elif consent: info['consent'] = consent.group(1)                        # consent = bot
-
-        ## Check for previous experiment.
-        experiment = re.search('experiment\t(.*)\n', logs)
-        if experiment: info['experiment'] = experiment.group(1)
+        if consent and consent.group(1) == 'True': info['consent'] = True
+        elif consent and consent.group(1) == 'False': info['consent'] = False
+        elif consent: info['consent'] = consent.group(1)
 
         ## Check for previous complete.
         complete = re.search('complete\t(.*)\n', logs)
@@ -138,17 +158,28 @@ def index():
         ## Redirect participant as appropriate.
         if 'complete' in session:
             return redirect(url_for('complete.complete'))
-        elif 'experiment' in session:
-            return redirect(url_for('experiment.experiment'))
         else:
             return redirect(url_for('consent.consent'))
 
-    ## Case 7: first visit, workerId present.
+    ## Case 6: first visit, workerId present.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId','address','user_agent'], 'w')
+        write_metadata(session, ['workerId','hitId','assignmentId','subId','address','browser','platform','version'], 'w')
 
-        ## Redirect participant to consent form.
+        ## Redirect participant to consent form
         return redirect(url_for('consent.consent'))
+
+## Define secret route.
+@app.route('/reload_mapping')
+def reload_mapping():
+    from flask import render_template_string
+
+    ## Re-load mapping file.
+    with open(os.path.join(ROOT_DIR, 'mapping.txt'), 'r') as f:
+        for line in f.readlines():
+            k, v = line.strip().split(',')
+            mapping[k] = v
+
+    return render_template_string("hope you're having a good day today :)")

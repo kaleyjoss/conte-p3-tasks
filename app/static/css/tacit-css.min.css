@@ -1,24 +1,19 @@
 /* DOCUMENT CSS */
 html,body,button,option {
-  font-family: system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Verdana","Arial","sans-serif";
   font-size: 18px;
   font-stretch: normal;
   font-style: normal;
   font-weight: 400;
   line-height: 29.7px
 }
-html,body {
-  width: 100%
-}
-html {
-  height: 100%
-}
+
 body {
-  max-width: 1200px;
-  margin: auto;
-  background: #fff;
-  color: #1a1919;
-  padding: 36px
+  background: white;
+  color: black;
+  margin: 2% 10%;
+  padding-bottom: 50px;
+  
 }
 
 /* PARAGRAPH CSS */
@@ -29,7 +24,7 @@ a {
   color: #275a90;
   text-decoration: none
 }
-a: hover{
+a.hover {
   text-decoration: underline
 }
 hr {
@@ -39,7 +34,8 @@ var,em,i {
   font-style: italic
 }
 dt,strong,b {
-  font-weight: 600
+  font-weight: 600;
+  line-height: 1.8;
 }
 * {
   border: 0;
@@ -69,16 +65,20 @@ h1,h2,h3,h4,h5,h6 {
   margin-bottom: 12px
 }
 h1 {
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 500;
+  letter-spacing: normal;
   line-height: 43.2px;
-  margin-top: 72px
+  margin-top: 72px;
+  text-align: center;
+  padding-bottom: 10px;
 }
 h2 {
   font-size: 28px;
   font-weight: 500;
   line-height: 30px;
-  margin-top: 36px;
+  margin-top: 40px;
+  margin-bottom: 20px;
   text-decoration: underline;
 }
 h3 {
@@ -105,6 +105,22 @@ h6 {
   text-transform: uppercase
 }
 
+/* TRIAL CONTAINER CSS */
+/* Parent flex container with up-down layout */
+.trial-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Flex container that lines objects side by side */
+.trial-objects {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
 /* BUTTON CSS */
 button {
   border-radius: 3.6px;
@@ -112,8 +128,7 @@ button {
   padding: 9.9px;
   cursor: pointer;
   display: inline;
-  margin-bottom: 18px;
-  margin-right: 7.2px;
+  margin: 18px 5px;
   padding: 6.525px 23.4px;
   text-align: center
 }
@@ -121,7 +136,136 @@ button[type="submit"] {
   background: #ffb347;
   color: #fff
 }
-button[type="submit"]: hover {
-  background: #ffb347;
-  color: #bfbfbf
+button[type="trial"]:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+input[type='radio'] { 
+  transform: scale(2); 
+}
+
+/* CARD ANIMATION CSS */
+.flip-card {
+  background-color: transparent;
+  width: 400px;
+  height: 500px;
+  perspective: 1000px;
+  float: left;
+  display: inline;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border: slategray solid 2px;
+}
+
+/* Make card flip over on key press */
+.flip-card[status="reveal"] .flip-card-inner {
+  transform: rotateY(180deg);
+  transition: transform 0.6s;
+}
+
+/* Make card flip back to face down */
+.flip-card[status="end"] .flip-card-inner {
+  transform: translateX(1000px);
+  transition: transform 0.8s;
+}
+
+/* Make card shift over to left for more space */
+.flip-card[status="correct"] .flip-card-inner{
+  border: green solid 10px;
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  background-color: white;
+  color: black;
+}
+
+.flip-card-back {
+  background-color: white;
+  color: black;
+  transform: rotateY(180deg);
+}
+
+.likert li {
+  float: left;
+  padding: 20px;
+  list-style-type: none;
+}
+
+
+/* SLIDER CSS */
+.slidecontainer {
+  width: 500px; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;
+  width: 500px;
+  height: 20px;
+  border-radius: 5px; /* Makes it round */
+  background: rgb(255, 255, 255);
+  border: black solid 1px;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 0.8; /* Fully shown on mouse-over */
+}
+
+.slider.unclicked::-webkit-slider-thumb {
+  opacity: 0;
+}
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 35px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -5px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+/* Firefox */
+.slider::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* All the same stuff for IE */
+.slider::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Experiment One</title>
+    <title>{{ workerId }}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href= "../../static/css/tacit-css.min.css" rel="stylesheet" type="text/css">
+    <link href="../../static/css/jspsych-fctask.css" rel="stylesheet" type="text/css">
+
+    <!-- Load libraries -->
+    <script src="../../static/lib/jquery-3.3.1/jquery.min.js"></script>
+		<script src="../../static/lib/jspsych-6.3.1/jspsych.js"></script>
+    
+    <!-- Load NivTurk plugins -->
+		<script src="../../static/js/nivturk-plugins.js"></script>
+
+    <!-- Load jsPsych plugins -->
+    <script src="../../static/lib/jspsych-6.3.1/plugins/jspsych-fullscreen.js"></script>
+    <script src="../../static/lib/jspsych-6.3.1/plugins/jspsych-survey-likert.js"></script>
+    <script src="../../static/lib/jspsych-6.3.1/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="../../static/lib/jspsych-6.3.1/plugins/jspsych-instructions.js"></script>
+    <script src="../../static/lib/jspsych-6.3.1/plugins/jspsych-preload.js"></script>
+    <script src="../../static/js/fctask_shared/comprehension-check.js"></script>
+
+    <!-- Load Custom Plugins -->
+    <script src="../../static/js/fctask_shared/jspsych-fctask-trial.js"></script>
+    <script src="../../static/js/fctask_shared/jspsych-expectancy-rating.js"></script>
+    <script src="../../static/js/fctask_shared/jspsych-affective-rating.js"></script>
+    <script src="../../static/js/fctask_shared/jspsych-html-keyboard-response-fc.js"></script>
+
+    <!-- Load Task - Shared Files -->
+    <script src="../../static/js/fctask_shared/fctask_design.js"></script>
+    <script src="../../static/js/fctask_shared/fctask_attention_check.js"></script>
+    <script src="../../static/js/fctask_shared/fctask_rating_scales.js"></script>
+    <script src="../../static/js/fctask_shared/fctask_data_functions.js"></script>
+    <script src="../../static/js/jspsych-survey-debrief.js"></script>
+
+    <!-- Load Task - Specific Files -->
+    <script src="../../static/js/jspsych-survey-template.js"></script>
+    <script src="../../static/js/jspsych-mental-health-alert.js"></script>
+    <script src="../../static/js/acqext/attention_checks.js"></script>
+    <script src="../../static/js/acqext/ipip.js"></script>
+    <script src="../../static/js/acqext/instructions_acqext.js"></script>
+    <script src="../../static/js/acqext/timeline_acqext.js"></script>
+
+	</head>
+
+	<body></body>
+
+	<script>
+
+    // Display alert message on back/refresh.
+    // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+    
+    function verify_unload(e){
+      e.preventDefault();
+      (e || window.event).returnValue = null;
+      incomplete_save('acqext')
+      return null;
+    };
+
+    window.addEventListener("beforeunload", verify_unload);
+
+    var timeline_landing_page_test = [full_screen];
+
+    jsPsych.init({
+      timeline: timelineAcqExt,
+      on_finish: function() {
+
+        // Remove requirement to verify redirect
+        window.removeEventListener("beforeunload", verify_unload);
+
+        // Save task data
+        saveDatafcTaskOne('acqext');
+
+        // Add interactions to the data variable
+        var interaction_data = jsPsych.data.getInteractionData();
+        jsPsych.data.get().addToLast({interactions: interaction_data.json()});
+
+        // jsPsych.data.displayData('json');
+      }
+    });
+
+  </script>
+</html>
+

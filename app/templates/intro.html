@@ -1,0 +1,92 @@
+<!doctype html>
+<!--
+The consent.html displays the text of an IRB-approved consent form.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Making Experiment - Introduction</title>
+  <link rel="stylesheet" href="/static/css/tacit-css.min.css"/>
+</head>
+<body>
+
+  <!-- Study headers -->
+  <h1>Introductory Information Page</h1>
+
+  <!-- <hr>
+  <p>
+    <b>TITLE OF RESEARCH:</b> Behavioral Studies of Learning and Decision-making
+    <br>
+    <b>PRINCIPAL INVESTIGATOR</b>: Yael Niv, Ph.D.
+    <br>
+    <b>PRINCIPAL INVESTIGATOR’S DEPARTMENT</b>: Psychology and the Princeton Neuroscience Institute
+  </p>
+  <hr> -->
+
+  <p>
+    Hi there, and welcome to this info page!
+  </p>
+  <p>
+    Before we give you all the details and ask for your consent to participate in the experiment on this webpage, we would like to introduce ourselves and the broader goal of this study.
+  </p>
+
+  <!-- Study purpose -->
+  <h2>Why do we want to run this experiment?</h2>
+  <p>
+    We are a team of researchers who are devoted to improving treatment for psychological disorders. Currently, there are many effective treatment methods available. However, some of these treatments seem to work better for certain people, while other treatments might be the most effective for a different group of individuals.
+  </p>
+  <p>
+    Our goal right now is to find out <b>who needs what</b>: which individuals can benefit the most from what treatment, so that in the future, those struggling with psychological disorders can be matched with the type of intervention that suits them best.
+  </p>
+
+  <h2>How does this experiment relate to the goal above?</h2>
+  <p>
+    In this particular study, we will be using behavioral tasks to tap into psychological factors that are relevant for disorders such as depression. We hypothesize that these simple behaviors can reveal potential clues regarding treatment matches.
+  </p>
+  <p>
+    We are interested in your genuine ability and reactions: there are no right or wrong answers (except for comprehension checks for task instructions)!
+  </p>
+  <p>
+    If you choose to participate in this study, your time and effort will be most helpful for the goal of this experiment if you respond to these tasks as you would under your normal conditions.
+  </p>
+  <p>
+    Please note that the study you are about to access through this webpage does not involve any form of psychological treatment nor clinical diagnosis. The experimenters are not in a position to diagnose any disorders or offer medical advice.
+  </p>
+
+  <h2>What's next?</h2>
+  <p>
+    If you are interested in participating, press “next” to see our consent form, where we outline what this experiment involves and the steps we will take to protect your data.
+  </p>
+
+
+  <center>
+    <form method="post">
+
+      <!-- <div class="recontact">
+        <p>Would you like to be re-contacted for future studies?</p>
+        <p>
+          <input type="radio" name="future_contact" value="Yes">Yes
+          <input type="radio" name="future_contact" value="No">No
+        </p>
+      </div> -->
+
+      <button type="submit" name="subj_press" value=1>Next</button>
+      <!-- <button type="submit" name="subj_press" value=0>No thank you</button> -->
+
+    </form>
+  </center>
+
+</body>
+<style>
+.recontact {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 0;
+  z-index: -1;
+}
+</style>
+</html>

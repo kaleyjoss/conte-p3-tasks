@@ -1,5 +1,6 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
 from .io import write_metadata
+# from .db import get_db
 
 ## Initialize blueprint.
 bp = Blueprint('consent', __name__)
@@ -17,12 +18,16 @@ def consent():
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
 
+        ## Update metadata.
+        session['WARNING'] = "Revisited consent page."
+        write_metadata(session, ['WARNING'], 'a')
+
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
     ## Case 2: first visit.
     elif not 'consent' in session:
-
+        
         ## Present consent form.
         return render_template('consent.html')
 
@@ -43,6 +48,9 @@ def consent():
 
         ## Redirect participant to alert page.
         return redirect(url_for('alert.alert'))
+
+        # ## Redirect participant to alert page.
+        # return redirect(url_for('experiment.main'))
 
 @bp.route('/consent', methods=['POST'])
 def consent_post():
@@ -72,6 +80,9 @@ def consent_post():
 
         ## Redirect participant to alert page.
         return redirect(url_for('alert.alert'))
+
+        # ## Redirect participant to alert page.
+        # return redirect(url_for('experiment.main'))
 
     else:
 

@@ -13,7 +13,7 @@
 
   {% if errornum == 1000 %}
 
-  <p>Sorry, we are missing your Prolific ID. Please start the experiment over from the Prolific link.</p>
+  <p>Sorry, we are missing your Participant ID. Please start the experiment over from the full link.</p>
 
   {% elif errornum == 1001 %}
 
@@ -25,35 +25,76 @@
 
   <p>We are sorry you do not wish to complete this study.</p>
 
-  <p>Please return the study so someone else can perform the experiment.</p>
+  <p>Please close this tab to exit.</p>
 
   {% elif errornum == 1003 %}
 
   <p>Sorry, there was a technical error in our processing of your study. Most likely this means an important component of the experiment failed to load.</p>
 
-  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
+  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
 
   {% elif errornum == 1004 %}
 
   <p>Sorry, our records indicate that you have already completed (or attempted to complete) this study. If you have not previously completed the study, you may have reached this page because you pressed refresh, back, or opened the study in a new browser window.</p>
 
-  <p>Because this is a psychology experiment, you can only complete this study once, and you cannot restart the study if you have previously begun it. Please return the study so someone else can perform the experiment.</p>
+  <p>Because this is a psychology experiment, you can only complete this study once, and you cannot restart the study if you have previously begun it.</p>
 
-  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
 
   {% elif errornum == 1005 %}
 
-  <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected you were responding randomly or showing a lack of engagement with the task. Please note that if we detect similar behavior from your account in the future, you may be permanently excluded from all future experiments.</p>
+  <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected responses that show a lack of engagement with the task. Your participation quality matters: please make sure to follow the instructions and complete the tasks attentively.</p>
 
-  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
 
-  <p>Please return the study so someone else can perform the experiment.</p>
+  
+  {% elif errornum == 1006 %}
 
+  <p>Sorry, our records indicate that you have already completed (or attempted to complete) this game. If you have not previously completed the game, you may have reached this page because you pressed refresh, back, or opened the study in a new browser window.</p>
+
+  <p>Because this is a psychology experiment, you can only complete the game once, and you cannot restart the game if you have previously begun it.</p>
+
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
+
+  <p>To exit, please close this tab. If you would like to return to the task preview page, please press the back button. Other than for this purpose, please do not use the back button for the remainder of the experiment.</p>
+
+  
+  {% elif errornum == 1007 %}
+
+  <p>Sorry, our records indicate that you have already completed (or attempted to complete) this game and <font style="color:red">it has not been long enough</font> before the next time you are eligible to complete this experiment.</p> 
+  <p>Please attempt this game again at a later time.</p>
+  <p>To exit, please close this tab. If you would like to return to the main page, please press the back button. Other than for this purpose, please do not use the back button for the remainder of the experiment.</p>
+
+  <p>If you have not previously completed the game, you may have reached this page because you pressed refresh, back, or opened the study in a new browser window.</p>
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
+
+  {% elif errornum == 1008 %}
+
+  <p>Sorry, we cannot identify your Participant ID. Please start the experiment over from the full link.</p>
+
+  {% elif errornum == 1009 %}
+
+  <p>We have detected unusual activity from your browser. Most likely this means we detected that the task was closed mid-way and you are attempting to reaccess the study soon after.</p>
+  <p>Your participation quality matters: please make sure to follow the instructions and complete the tasks attentively.</p>
+  <p>To ensure that your performance in this study is not influenced by fatigue, please take a break. You will be able to reaccess the study after 10 minutes.</p>
+  <p>If it has been 10 minutes and you are still seeing this error after refreshing the page, try clearing your browser history.</p>
+
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
+
+  {% elif errornum == 1010 %}
+
+  <p>Sorry, our records indicate that <font style="color:red">it has not been long enough</font> since you completed task 1 to continue this experiment.</p> 
+  <p>Please attempt the remaining sections of the experiment after at least 12 hours have passed since you completed the first task.</p>
+  <p>To exit, please close this tab. If you would like to return to the main page, please press the back button. Other than for this purpose, please do not use the back button for the remainder of the experiment.</p>
+
+  <p>If you have not previously completed task 1, you may have reached this page because you pressed refresh, back, or opened the study in a new browser window.</p>
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
+  
   {% else %}
 
   <p>Sorry, there was an unexpected error in our processing of your study.</p>
 
-  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
+  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please contact us at ra.nivlab@gmail.com describing the error that you experienced.</p>
 
   {% endif %}
 
