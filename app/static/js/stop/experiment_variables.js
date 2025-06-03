@@ -40,13 +40,13 @@ var nprop = 1/4;
 // E.g. when NdesignReps = 8 and nprop = 1/4 (see above), the number of trials per block = 64 (8*8)
 // Do this for the practice and experimental phases (note: practice can never be higher than exp)
 
-var NdesignReps_practice = 4;
-var NdesignReps_exp = 8;
+var NdesignReps_practice = 0; //4
+var NdesignReps_exp = 1; //8
 
 // Number of experimental blocks (excluding the first practice block).
 // Note that NexpBl = 0 will still run the practice block
 
-var NexpBL = 4;
+var NexpBL = 1; //4
 
 
 // ----- CUSTOMISE THE TIME INTERVALS (in milliseconds)-----
@@ -66,7 +66,7 @@ var bFBT = 15000; // break interval between blocks
 // - ID via the URL of the experiment: 'XXXX.html?subject=15'(subject is the current keyword)
 // - determine ID at random with jsPsych.randomization.randomID().
 
-var id = 'participant' // use one of these three options: 'participant', 'url', 'random'
+var id = 'prolific' // use one of these four options: 'prolific', 'participant', 'url', 'random'
 
 
 // ----- CUSTOMISE SCREEN VARIABLES -----

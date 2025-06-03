@@ -328,7 +328,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
       jsPsych.data.addProperties({
 
-        participantID: code
+        workerId: code
 
       });
 
@@ -786,7 +786,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
     on_start: function(data) {
 
-      var subjID = jsPsych.data.get().last(1).values()[0]['participantID'];
+      var subjID = jsPsych.data.get().last(1).values()[0]['workerId'];
       var full_data = jsPsych.data.get();
       var ignore_columns = ['raw_rt','trial_type','first_stimulus','second_stimulus','onset_of_first_stimulus',
         'onset_of_second_stimulus','key_press','correct_response','trial_index','internal_node_id'];
@@ -795,7 +795,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       // the next piece of codes orders the columns of the data file
       var d = selected_data.values() // get the data values
       // make an array that specifies the order of the object properties
-      var arr = ['participantID','age','gender','block_i','trial_i','stim','signal','SSD','response','rt','correct','focus','Fullscreen',
+      var arr = ['workerId','age','gender','block_i','trial_i','stim','signal','SSD','response','rt','correct','focus','Fullscreen',
       'time_elapsed','browser_name','browser_version','os_name','os_version','tablet','mobile','screen_resolution','window_resolution'];
       new_arr = [] // we will fill this array with the ordered data
       function myFunction(item) { // this is function is called in the arr.forEach call below
@@ -809,6 +809,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
         arr.forEach(myFunction) // for each element in the array run my function
         selected_data.values()[i] = new_obj; // insert the ordered values back in the jsPsych.data object
       }
+      
       if (!online) {
 
         selected_data.localSave('csv', 'SST_data_' + subjID + '.csv');
@@ -849,31 +850,29 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
   } else {
       if (id == 'prolific'){
-        var jsPsych = initJsPsych();
-
         // Add participant info to all trials
-        jsPsych.data.addProperties({participantID: "{{ workerId }}"});
+        jsPsych.data.addProperties({workerId: "{{ workerId }}"});
       }
 
       if (id == "url"){
 
         var urlvar = jsPsych.data.urlVariables();
 
-        var code = urlvar.subject; jsPsych.data.addProperties({participantID: code});
+        var code = urlvar.subject; jsPsych.data.addProperties({workerId: code});
 
-      } else {
+      } if (id == "random") {
 
-        var code = jsPsych.randomization.randomID(); jsPsych.data.addProperties({participantID: code});
+        var code = jsPsych.randomization.randomID(); jsPsych.data.addProperties({workerId: code});
 
       }
 
       if (fullscreen) {
 
-        var start_timeline = [welcome, consent, age, gender, fullscr, instructions]
+        var start_timeline = [welcome, consent, fullscr, instructions] // took out age and gender questions/pages
 
       } else {
 
-        var start_timeline = [welcome, consent, age, gender, instructions]
+        var start_timeline = [welcome, consent, instructions] // took out age and gender questions/pages
 
       }
 
@@ -994,7 +993,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
       cache: false,
 
-      url: 'php/save_data_append.php', // IMPORTANT: change the php script to link to the directory of your server where you want to store the data!
+      url: '/save_data_stopTask', // Changed from php/save_data_append.php
 
       data: {
 
@@ -1034,23 +1033,27 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
  // point in experiment when particpant id is manually entered. see 'start_timeline'
       if (online){
 
-        var subjID = jsPsych.data.get().last(1).values()[0]['participantID'];
+        var subjID = jsPsych.data.get().last(1).values()[0]['workerId'];
 
         if (data.trial_index == id_index){ // write header
 
-          data_row = "participantID,age,gender,block_i,trial_i,stim,signal,SSD,response,rt,correct," +
+          data_row = "workerId,age,gender,block_i,trial_i,stim,signal,SSD,response,rt,correct," +
                         "focus,Fullscreen,time_elapsed,browser_name,browser_version,os_name,os_version," +
                         "tablet,mobile,screen_resolution,window_resolution\n"
           appendData('SST_data_'+ subjID +'.csv',data_row)
 
+          
+
         } else if (data.trial_type == 'custom-stop-signal-plugin'){ // append data each stimulus
 
-          data_row = data.participantID + ',' + data.age + ',' + data.gender + ',' + data.block_i + ',' + data.trial_i + ',' +
+          data_row = data.workerId + ',' + data.age + ',' + data.gender + ',' + data.block_i + ',' + data.trial_i + ',' +
                         data.stim + ',' + data.signal + ',' + data.SSD + ',' + data.response + ',' + data.rt + ',' + data.correct + ',' +
                         data.focus + ',' + data.Fullscreen + ',' + data.time_elapsed + ',' + data.browser_name + ',' +
                         data.browser_version + ',' + data.os_name + ',' + data.os_version + ',' + data.tablet + ',' + data.mobile + ',' +
                         data.screen_resolution + ',' + data.window_resolution + '\n'
           appendData('SST_data_'+ subjID +'.csv',data_row)
+          
+         
 
         }
 
@@ -1088,13 +1091,19 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
     on_finish: function() {
 
+      // Save complete dataset in the nivturk style (this also increments to the next stage)
+      on_success("stop");
+
       if (redirect_onCompletion){
 
         setTimeout("location.href = '" + redirect_link + "';",redirect_timeout); // redirect to another URL with a certain delay, only when redirect_onCompletion is set to 'true'
 
       }
 
-    },
+      
+
+    }
+
 
   })
 

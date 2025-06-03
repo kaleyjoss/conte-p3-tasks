@@ -1,8 +1,8 @@
 import os, sys, re, configparser, warnings
 from collections import OrderedDict
-from flask import (Flask, redirect, render_template, request, session, url_for)
+from flask import (Flask, redirect, render_template, request, session, url_for, jsonify)
 from app import consent, experiment, complete, error, alert
-from .db import initialize_db
+from .db import initialize_db, get_worker
 from .io import write_metadata
 from .utils import gen_code
 __version__ = 'nivturk-sqlite3-battery'
@@ -88,6 +88,11 @@ def index():
     ## Define subject id.
     info['subId'] = mapping.get(info['workerId'], gen_code(24))
     print(info['subId'])
+
+    stage = get_worker(session['db_path'], info['workerId'])
+    print(f"DEBUG: workerId: {info['workerId']}")
+    print(f"DEBUG: stage from get_worker(): {stage}")
+    print(f"DEBUG: stage passed to template: {stage - 1}")
 
     # checkpid = True
 
@@ -183,3 +188,22 @@ def reload_mapping():
             mapping[k] = v
 
     return render_template_string("hope you're having a good day today :)")
+
+
+@app.route('/save_data_stopTask', methods=['POST'])
+def save_data_stopTask():
+    try:
+        filename = request.form.get('filename')
+        filedata = request.form.get('filedata')
+        
+        # Create data directory if it doesn't exist
+        os.makedirs('data', exist_ok=True)
+        
+        # Write to file
+        filepath = os.path.join('data', filename)
+        with open(filepath, 'a', encoding='utf-8') as f:
+            f.write(filedata)
+        
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
