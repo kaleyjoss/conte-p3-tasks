@@ -33,7 +33,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   <!-- Load NivTurk plug-ins -->
   <script src="../../static/js/nivturk-plugins.js" type="text/javascript"></script>
 
-    <!-- Load expeirment -->
+    <!-- Load experiment -->
   <script src="../../static/lib/jspsych-6.0.5/jspsych.js"></script> <!-- jsPsych core library -->
   <script src="../../static/lib/jspsych-6.0.5/plugins/jspsych-instructions.js"></script> <!-- plugins define specific tasks, e.g., presenting instructions -->
   <script src="../../static/lib/jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
@@ -287,6 +287,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
 
   // informed consent trial. The informed_consent_text variable comes from /configuration/text_variables.js
+  // CONTE 2025-- Not used
 
   var consent = {
 
@@ -304,8 +305,9 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
 
   // if enabled below, get participant's id from participant and add it to the datafile.
-
   // the prompt is declared in the configuration/text_variables.js file
+    // CONTE 2025-- Not used
+
 
   var participant_id = {
 
@@ -339,8 +341,9 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
 
   // get participant's age and add it to the datafile
-
   // the prompt is declared in the configuration/text_variables.js file
+  // CONTE 2025-- Not used
+
 
   var age = {
 
@@ -373,10 +376,8 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
 
 
-  // get participant's gender and add it to the datafile
-
-  // the prompt and options are declared in the configuration/text_variables.js file
-
+  // get participant's gender and add it to the datafile (the prompt and options are declared in the configuration/text_variables.js file)
+  // CONTE 2025-- Not used
   var gender = {
 
     type: 'survey-multi-choice',
@@ -837,42 +838,44 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   // only go into fullscreen mode if 'fullscreen' is true
 
   if (id == "participant"){
+    // CONTE: not used
 
     if (fullscreen){
-
+      // CONTE: if we wanted to use this, we'd take out: consent, participant_id, age, gender
       var start_timeline = [welcome, consent, participant_id, age, gender, fullscr, instructions]
 
     } else {
-
+      // CONTE: if we wanted to use this, we'd take out: consent, participant_id, age, gender
       var start_timeline = [welcome, consent, participant_id, age, gender, instructions]
 
     }    
 
   } else {
       if (id == 'prolific'){
+        // CONTE: CORRECT!
         // Add participant info to all trials
         jsPsych.data.addProperties({workerId: "{{ workerId }}"});
       }
 
       if (id == "url"){
-
+        // CONTE: not used
         var urlvar = jsPsych.data.urlVariables();
 
         var code = urlvar.subject; jsPsych.data.addProperties({workerId: code});
 
       } if (id == "random") {
-
+        // CONTE: not used
         var code = jsPsych.randomization.randomID(); jsPsych.data.addProperties({workerId: code});
 
       }
 
       if (fullscreen) {
 
-        var start_timeline = [welcome, consent, fullscr, instructions] // took out age and gender questions/pages
+        var start_timeline = [welcome, fullscr, instructions] // took out age and gender questions/pages
 
       } else {
 
-        var start_timeline = [welcome, consent, instructions] // took out age and gender questions/pages
+        var start_timeline = [welcome, instructions] // took out age and gender questions/pages
 
       }
 
@@ -1010,6 +1013,10 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
 
   // run the experiment!
+  console.log("on_success function:", typeof on_success);
+  if (typeof on_success === 'undefined') {
+      console.error("on_success function is not defined!");
+}
 
   jsPsych.init({
 
@@ -1089,15 +1096,29 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
     },
 
+    
     on_finish: function() {
+      console.log("on_finish callback triggered");
 
       // Save complete dataset in the nivturk style (this also sends back to home)
       
-      // 1. Add interactions to the data variable
+      // 2. Add interactions to the data variable
       var interaction_data = jsPsych.data.getInteractionData();
-      jsPsych.data.get().addToLast({interactions: interaction_data.json()});
-      // 2. Save data + redirect to home page
-      on_success("stop");
+      jsPsych.data.get().addToLast({interactions: interaction_data}); // changed interaction_data.json() --> interaction_data so it doesn't double-JSON
+      
+      // 3. Save data + redirect to home page
+      console.log("About to call on_success('stop')");
+      try {
+          on_success_stopTask("stop");
+          console.log("on_success called successfully");
+      } catch (error) {
+          console.error("Error calling on_success:", error);
+          // Fallback - direct redirect
+          window.location.replace('/main');
+      }
+
+      //workaround which doesn't save data in nivturk style but does do a successful reroute
+      //window.location.replace('/experiments/recovery'); 
 
       // This is the stop-signal task built in redirection, which we don't use.
       if (redirect_onCompletion){
@@ -1109,13 +1130,8 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       
 
     }
-
-
+      
   })
 
 </script>
-
-
-
 </html>
-

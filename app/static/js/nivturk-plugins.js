@@ -16,6 +16,7 @@ function pass_message(experiment, msg) {
 
 // Successful completion of experiment: redirect to experiment page.
 function on_success(experiment) {
+  console.log("on_success function called with experiment:", experiment); //kaley debug
 
   $.ajax({
     url: "/on_success?experiment=" + experiment,
@@ -23,12 +24,31 @@ function on_success(experiment) {
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
+    console.log("AJAX success, redirecting to /main");
     window.location.replace('/main'); // back to home
   }).fail(function(error) {
     console.log(error);
   });
 
 }
+
+function on_success_stopTask(experiment) {
+  console.log("on_success function called with experiment:", experiment); //kaley debug
+
+  $.ajax({
+    url: "/on_success_stopTask?experiment=" + experiment,
+    method: 'POST',
+    data: JSON.stringify(jsPsych.data.get()),
+    contentType: "application/json; charset=utf-8",
+  }).done(function(data, textStatus, jqXHR) {
+    console.log("AJAX success, redirecting to /main");
+    window.location.replace('/main'); // back to home
+  }).fail(function(error) {
+    console.log(error);
+  });
+
+}
+
 
 // Successful completion of all experiments.
 function redirect_success() {
