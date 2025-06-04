@@ -1091,9 +1091,15 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
     on_finish: function() {
 
-      // Save complete dataset in the nivturk style (this also increments to the next stage)
+      // Save complete dataset in the nivturk style (this also sends back to home)
+      
+      // 1. Add interactions to the data variable
+      var interaction_data = jsPsych.data.getInteractionData();
+      jsPsych.data.get().addToLast({interactions: interaction_data.json()});
+      // 2. Save data + redirect to home page
       on_success("stop");
 
+      // This is the stop-signal task built in redirection, which we don't use.
       if (redirect_onCompletion){
 
         setTimeout("location.href = '" + redirect_link + "';",redirect_timeout); // redirect to another URL with a certain delay, only when redirect_onCompletion is set to 'true'

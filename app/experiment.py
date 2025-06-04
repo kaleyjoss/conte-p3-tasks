@@ -273,12 +273,14 @@ def pass_message():
 
 @bp.route('/on_success', methods = ['POST'])
 def on_success():
-    """Save complete jsPsych dataset to disk."""
+    """Save complete jsPsych dataset to disk & redirect back to Homes page."""
 
     ## Retrieve experiment.
     page = request.args.get('experiment')
+    print(f"/on_success backend page: {page}")
 
     if request.is_json:
+        print(f"/on_success is_json: TRUE")
 
         ## Retrieve jsPsych data.
         JSON = request.get_json()
@@ -286,13 +288,15 @@ def on_success():
         ## Save jsPsych data to disk.
         session['page'] = page
         write_data(session, JSON, method='success')
+        print(f'write_data success')
 
         ## Save jsPsych data to database.
         add_data(session['db_path'], (session['workerId'], session['subId'], session['page'], JSON))
-
+        print(f'add_data success')
     ## Update participant metadata.
     session[page] = 'success'
     write_metadata(session, [page], 'a')
+    print(f'add_metadata success')
 
     ## DEV NOTE:
     ## This function returns the HTTP response status code: 200

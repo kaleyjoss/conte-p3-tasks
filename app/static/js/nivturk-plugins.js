@@ -23,7 +23,7 @@ function on_success(experiment) {
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
-    window.location.replace('/main');
+    window.location.replace('/main'); // back to home
   }).fail(function(error) {
     console.log(error);
   });
