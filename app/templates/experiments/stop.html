@@ -87,6 +87,10 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
   jsPsych.data.addProperties({ // add these variables to all rows of the datafile
 
+    battery_task: 'stop',
+    task_version: '1.0',
+    jspsych_version: '6.0.5',
+
     browser_name: bowser.name, browser_version: bowser.version,
 
     os_name: bowser.osname, os_version: bowser.osversion,
@@ -821,6 +825,34 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
   };
 
+/* #########################################################################
+
+  save and redirect function (instead of using the one from nivturk-plugins.js)
+
+  ######################################################################### */
+
+  function on_success(experiment) {
+    const payload = {
+      experiment: experiment,
+      data: jsPsych.data.get().json()
+    };
+
+    fetch('/on_success', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      window.location.replace('/main');
+    })
+    .catch(error => {
+      console.error('Error submitting experiment data:', error);
+      window.location.replace('/main');
+    });
+  }
 
 
   /* #########################################################################
@@ -1013,10 +1045,6 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
 
   // run the experiment!
-  console.log("on_success function:", typeof on_success);
-  if (typeof on_success === 'undefined') {
-      console.error("on_success function is not defined!");
-}
 
   jsPsych.init({
 
@@ -1037,7 +1065,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       // append a subset of the data each time a go or stop stimulus is shown (the custom-stop-signal-plugin)
 
       id_index = 2;
- // point in experiment when particpant id is manually entered. see 'start_timeline'
+      // point in experiment when particpant id is manually entered. see 'start_timeline'
       if (online){
 
         var subjID = jsPsych.data.get().last(1).values()[0]['workerId'];
@@ -1059,12 +1087,40 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
                         data.browser_version + ',' + data.os_name + ',' + data.os_version + ',' + data.tablet + ',' + data.mobile + ',' +
                         data.screen_resolution + ',' + data.window_resolution + '\n'
           appendData('SST_data_'+ subjID +'.csv',data_row)
-          
-         
-
-        }
-
+        } 
       }
+    },
+
+    on_finish: function() {
+      // window.location.replace('/experiments/recovery')
+
+      console.log("on_finish callback triggered");
+      console.log("on_success loaded version:", new Date());
+      
+
+      // Save complete dataset in the nivturk style (this also sends back to home)
+      
+      // 2. Add interactions to the data variable
+      var interaction_data = jsPsych.data.getInteractionData();
+      jsPsych.data.get().addToLast({interactions: interaction_data.json()}); // changed interaction_data.json() --> interaction_data so it doesn't double-JSON
+      console.log(jsPsych.data.get().json());         // stringified
+      console.log(jsPsych.data.get().values());       // full data as JS objects
+      console.log(jsPsych.data.get().values()[0]);    // first trial's data
+
+      // 3. Save data + redirect to home page
+      console.log("About to call on_success('stop')");
+      try {
+          on_success("stop");
+          console.log("on_success called successfully");
+      } catch (error) {
+          console.error("Error calling on_success:", error);
+          // Fallback - direct redirect
+          window.location.replace('/main');
+      }
+      // // This is the stop-signal task built in redirection, which we don't use.
+      // if (redirect_onCompletion){
+      //   setTimeout("location.href = '" + redirect_link + "';",redirect_timeout); // redirect to another URL with a certain delay, only when redirect_onCompletion is set to 'true'
+      // }
 
     },
 
@@ -1095,41 +1151,6 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       min_height: minHeight
 
     },
-
-    
-    on_finish: function() {
-      console.log("on_finish callback triggered");
-
-      // Save complete dataset in the nivturk style (this also sends back to home)
-      
-      // 2. Add interactions to the data variable
-      var interaction_data = jsPsych.data.getInteractionData();
-      jsPsych.data.get().addToLast({interactions: interaction_data}); // changed interaction_data.json() --> interaction_data so it doesn't double-JSON
-      
-      // 3. Save data + redirect to home page
-      console.log("About to call on_success('stop')");
-      try {
-          on_success_stopTask("stop");
-          console.log("on_success called successfully");
-      } catch (error) {
-          console.error("Error calling on_success:", error);
-          // Fallback - direct redirect
-          window.location.replace('/main');
-      }
-
-      //workaround which doesn't save data in nivturk style but does do a successful reroute
-      //window.location.replace('/experiments/recovery'); 
-
-      // This is the stop-signal task built in redirection, which we don't use.
-      if (redirect_onCompletion){
-
-        setTimeout("location.href = '" + redirect_link + "';",redirect_timeout); // redirect to another URL with a certain delay, only when redirect_onCompletion is set to 'true'
-
-      }
-
-      
-
-    }
       
   })
 

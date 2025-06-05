@@ -271,74 +271,63 @@ def pass_message():
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     return ('', 200)
 
-@bp.route('/on_success', methods = ['POST'])
+# commented out for KALEY TEST
+# @bp.route('/on_success', methods = ['POST'])
+# def on_success():
+#     """Save complete jsPsych dataset to disk & redirect back to Home page."""
+
+#     ## Retrieve experiment.
+#     page = request.args.get('experiment')
+#     print(f"/on_success backend page: {page}")
+
+#     if request.is_json:
+#         print(f"/on_success is_json: TRUE")
+
+#         ## Retrieve jsPsych data.
+#         JSON = request.get_json()
+
+#         ## Save jsPsych data to disk.
+#         session['page'] = page
+#         write_data(session, JSON, method='success')
+#         print(f'write_data success')
+
+#         ## Save jsPsych data to database.
+#         add_data(session['db_path'], (session['workerId'], session['subId'], session['page'], JSON))
+#         print(f'add_data success')
+#     ## Update participant metadata.
+#     session[page] = 'success'
+#     write_metadata(session, [page], 'a')
+#     print(f'add_metadata success')
+
+#     ## DEV NOTE:
+#     ## This function returns the HTTP response status code: 200
+#     ## Code 200 signifies the POST request has succeeded.
+#     ## The corresponding jsPsych function handles the redirect.
+#     ## For a full list of status codes, see:
+#     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+#     return ('', 200)
+
+# KALEY TESTING:
+@bp.route("/on_success", methods=["POST"])
 def on_success():
-    """Save complete jsPsych dataset to disk & redirect back to Home page."""
-
-    ## Retrieve experiment.
-    page = request.args.get('experiment')
-    print(f"/on_success backend page: {page}")
-
     if request.is_json:
-        print(f"/on_success is_json: TRUE")
+        payload = request.get_json()
+        # print('received payload')
+        experiment = payload.get("experiment")
+        print(f'experiment: {experiment}')
+        jspsych_data = payload.get("data")
+        # print(f'data: {jspsych_data}')
+        # print(f"Received experiment: {experiment}")
+        # print(f"First 100 chars of data: {str(jspsych_data)[:100]}")
 
-        ## Retrieve jsPsych data.
-        JSON = request.get_json()
+        session['page'] = experiment
+        write_data(session, jspsych_data, method='success')
+        add_data(session['db_path'], (session['workerId'], session['subId'], experiment, jspsych_data))
+        session[experiment] = 'success'
+        write_metadata(session, [experiment], 'a')
+        return ('', 200)
+    return ('Expected JSON data', 400)
 
-        ## Save jsPsych data to disk.
-        session['page'] = page
-        write_data(session, JSON, method='success')
-        print(f'write_data success')
-
-        ## Save jsPsych data to database.
-        add_data(session['db_path'], (session['workerId'], session['subId'], session['page'], JSON))
-        print(f'add_data success')
-    ## Update participant metadata.
-    session[page] = 'success'
-    write_metadata(session, [page], 'a')
-    print(f'add_metadata success')
-
-    ## DEV NOTE:
-    ## This function returns the HTTP response status code: 200
-    ## Code 200 signifies the POST request has succeeded.
-    ## The corresponding jsPsych function handles the redirect.
-    ## For a full list of status codes, see:
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    return ('', 200)
-
-def on_success_stopTask():
-    """Save complete jsPsych dataset to disk & redirect back to Home page."""
-
-    ## Retrieve experiment.
-    page = request.args.get('experiment')
-    print(f"/on_success backend page: {page}")
-
-    if request.is_json:
-        print(f"/on_success is_json: TRUE")
-
-        ## Retrieve jsPsych data.
-        JSON = request.get_json()
-
-        ## Save jsPsych data to disk.
-        session['page'] = page
-        write_data(session, JSON, method='success')
-        print(f'write_data success')
-
-        ## Save jsPsych data to database.
-        add_data(session['db_path'], (session['workerId'], session['subId'], session['page'], JSON))
-        print(f'add_data success')
-    ## Update participant metadata.
-    session[page] = 'success'
-    write_metadata(session, [page], 'a')
-    print(f'add_metadata success')
-
-    ## DEV NOTE:
-    ## This function returns the HTTP response status code: 200
-    ## Code 200 signifies the POST request has succeeded.
-    ## The corresponding jsPsych function handles the redirect.
-    ## For a full list of status codes, see:
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    return ('', 200)
 
 
 @bp.route('/redirect_success')

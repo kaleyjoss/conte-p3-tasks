@@ -14,42 +14,45 @@ function pass_message(experiment, msg) {
 
 }
 
-// Successful completion of experiment: redirect to experiment page.
+// // Successful completion of experiment: redirect to experiment page.
+// function on_success(experiment) {
+//   $.ajax({
+//     url: "/on_success?experiment=" + experiment,
+//     method: 'POST',
+//     data: JSON.stringify(jsPsych.data.get().json()),
+//     contentType: "application/json; charset=utf-8",
+//   }).done(function(data, textStatus, jqXHR) {
+//     console.log("AJAX success, redirecting to /main");
+//     window.location.replace('/main'); // back to home
+//   }).fail(function(error) {
+//     console.log(error);
+//   });
+
+// }
+
 function on_success(experiment) {
-  console.log("on_success function called with experiment:", experiment); //kaley debug
+  console.log("on_success function called with experiment:", experiment);
+  console.log("on_success function called with experiment:", experiment);
+  const payload = {
+    experiment: experiment,
+    data: jsPsych.data.get().json()
+  };
 
   $.ajax({
-    url: "/on_success?experiment=" + experiment,
+    url: "/on_success",
     method: 'POST',
-    data: JSON.stringify(jsPsych.data.get().json()),
+    data: JSON.stringify(payload),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
     console.log("AJAX success, redirecting to /main");
-    window.location.replace('/main'); // back to home
+    window.location.replace('/main');
   }).fail(function(error) {
-    console.log(error);
+    console.log("AJAX request failed:", error);
   });
-
-}
-
-function on_success_stopTask(experiment) {
-  console.log("on_success function called with experiment:", experiment); //kaley debug
-
-  $.ajax({
-    url: "/on_success_stopTask?experiment=" + experiment,
-    method: 'POST',
-    data: JSON.stringify(jsPsych.data.get()),
-    contentType: "application/json; charset=utf-8",
-  }).done(function(data, textStatus, jqXHR) {
-    console.log("AJAX success, redirecting to /main");
-    window.location.replace('/main'); // back to home
-  }).fail(function(error) {
-    console.log(error);
-  });
-
 }
 
 
+ 
 // Successful completion of all experiments.
 function redirect_success() {
   window.location.replace('/redirect_success');

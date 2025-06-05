@@ -86,13 +86,13 @@ var exposure = Array(16).fill(0);
 var trial_no = 0;
 
 // Iterate over (pseudo) blocks.
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 1; i++) { // #changedfortesting from 4
 
   // Define bandits
   var bandits = [...Array(4).keys()].map(j => i * 4 + j);
 
   // Iterate over trials.
-  for (let j = 0; j < 15; j++) {
+  for (let j = 0; j < 1; j++) { // #changedfortesting from 15
 
     // Randomize bandit orders.
     bandits = jsPsych.randomization.shuffle(bandits);

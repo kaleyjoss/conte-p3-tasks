@@ -76,6 +76,9 @@
         // Add interactions to the data variable
         var interaction_data = jsPsych.data.getInteractionData();
         jsPsych.data.get().addToLast({interactions: interaction_data.json()});
+        console.log(jsPsych.data.get().json());         // stringified
+        console.log(jsPsych.data.get().values());       // full data as JS objects
+        console.log(jsPsych.data.get().values()[0]);    // first trial's data
 
         // jsPsych.data.displayData('json');
       }
