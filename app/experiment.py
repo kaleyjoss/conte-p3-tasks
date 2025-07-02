@@ -102,48 +102,48 @@ def acqext():
         ## Present experiment.
         return render_template('experiments/acqext.html',  workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
 
-# @bp.route('/experiments/risk', methods = ['GET', 'POST'])
-# def risk():
-#     #Allow writing data to file during experiment
-#     if request.method == 'POST':
-#         JSON = request.get_json()
-#         ## Save jsPsych data to disk.
-#         write_data_interval(session, 'risk', JSON)
-#         return ('', 200)
+@bp.route('/experiments/risk', methods = ['GET', 'POST'])
+def risk():
+    #Allow writing data to file during experiment
+    if request.method == 'POST':
+        JSON = request.get_json()
+        ## Save jsPsych data to disk.
+        write_data_interval(session, 'risk', JSON)
+        return ('', 200)
 
-#     """Present risk sensitivity task to participant."""
+    """Present risk sensitivity task to participant."""
 
-#     ## Error-catching: screen for missing session.
-#     if not 'workerId' in session:
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
 
-#         ## Redirect participant to error (missing workerId).
-#         return redirect(url_for('error.error', errornum=1000))
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('error.error', errornum=1000))
 
-#     else:
-#         ## Parse log file.
-#         with open(os.path.join(session['metadata'], session['workerId']), 'r') as f:
-#             logs = f.read()
+    else:
+        ## Parse log file.
+        with open(os.path.join(session['metadata'], session['workerId']), 'r') as f:
+            logs = f.read()
 
-#         #Check for last successful completion
-#         reaccess_gap = timedelta(days = 1000000)
-#         list_success = re.findall('(.*)\trisk\tsuccess\n', logs)
+        #Check for last successful completion
+        reaccess_gap = timedelta(days = 1000000)
+        list_success = re.findall('(.*)\trisk\tsuccess\n', logs)
 
-#         if len(list_success) > 0:
-#             success_time = datetime.strptime(list_success[-1], '%Y-%m-%d %H:%M:%S')
+        if len(list_success) > 0:
+            success_time = datetime.strptime(list_success[-1], '%Y-%m-%d %H:%M:%S')
 
-#             #if time since last successful completion is too short
-#             if (datetime.now() - success_time) < reaccess_gap:
-#                 session['risk'] = 'attempted reaccess'
-#                 write_metadata(session, ['risk'], 'a')
-#                 ## Redirect participant to error.
-#                 return redirect(url_for('error.error', errornum=1007))
+            #if time since last successful completion is too short
+            if (datetime.now() - success_time) < reaccess_gap:
+                session['risk'] = 'attempted reaccess'
+                write_metadata(session, ['risk'], 'a')
+                ## Redirect participant to error.
+                return redirect(url_for('error.error', errornum=1007))
         
-#         ## Update participant metadata.
-#         session['risk'] = 'start'
-#         write_metadata(session, ['risk'], 'a')
+        ## Update participant metadata.
+        session['risk'] = 'start'
+        write_metadata(session, ['risk'], 'a')
 
-#         ## Present experiment.
-#         return render_template('experiments/risk.html',  workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
+        ## Present experiment.
+        return render_template('experiments/risk.html',  workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
 
 
 @bp.route('/experiments/stop', methods = ['GET', 'POST'])
