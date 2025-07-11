@@ -41,7 +41,7 @@ var nprop = 1/4;
 // Do this for the practice and experimental phases (note: practice can never be higher than exp)
 
 var NdesignReps_practice = 4; //4 #testing
-var NdesignReps_exp = 4; //8 #testing
+var NdesignReps_exp = 8; //8 #testing
 
 // Number of experimental blocks (excluding the first practice block).
 // Note that NexpBl = 0 will still run the practice block

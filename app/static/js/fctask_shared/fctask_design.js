@@ -29,20 +29,20 @@ const practiceAudio = [
 ]
 
 // // Number of blocks and block design
-// let blocks = 2;
-// let nTrialsPractice = 6;
-// let nTrialsAcq = 13;
-// let nTrialsExtinction = 10;
-// let nTrialsRecovery = 8;
-// let nTrialsRelearning = 8;
+let blocks = 2;
+let nTrialsPractice = 6;
+let nTrialsAcq = 13;
+let nTrialsExtinction = 10;
+let nTrialsRecovery = 8;
+let nTrialsRelearning = 8;
 
 // kaley just for testing #testing
-let blocks = 1;
-let nTrialsPractice = 1;
-let nTrialsAcq = 1;
-let nTrialsExtinction = 1;
-let nTrialsRecovery = 1;
-let nTrialsRelearning = 1;
+// let blocks = 1;
+// let nTrialsPractice = 1;
+// let nTrialsAcq = 1;
+// let nTrialsExtinction = 1;
+// let nTrialsRecovery = 1;
+// let nTrialsRelearning = 1;
 
 /*
 Acquisition Blocks
