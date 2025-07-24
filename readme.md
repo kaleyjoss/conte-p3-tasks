@@ -42,12 +42,6 @@ http://YOUR_IP_ADDRESS:9000/?PROLIFIC_PID=testuser
 
 If you’re on a server, change ‘YOUR_IP_ADDRESS” to the server address
 
-For example, on nivlab servers, they would access on here:
-
-```python
-https://nivlab-rldm-dev-07.princeton.edu/?PROLIFIC_PID=testuser
-```
-
 ## Timing
 
 Stop signal task: 
