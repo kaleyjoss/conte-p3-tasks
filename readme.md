@@ -60,11 +60,7 @@ Risk Task
 
 Github: [https://github.com/fredvbrug/STOP-IT/tree/master](https://github.com/fredvbrug/STOP-IT/tree/master)  
 
-[Gili Explains Nivturk](https://nam02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1MDvtmKgDY61oFz6ioF7YVaS2TuNuTUfJ%2Fview%3Fusp%3Dsharing&data=05%7C02%7Ckj537%40rwjms.rutgers.edu%7Cd0606bdacd3f42f4d46108dd9930e9b3%7Cb92d2b234d35447093ff69aca6632ffe%7C1%7C0%7C638835157552003996%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=EU2NXwxw6%2FP%2FbIwDyyExTGEUi%2FsPb6sX0GhrHJO8TyU%3D&reserved=0) 
-
 Nivturk Documentation: [https://nivlab.github.io/nivturk/](https://nivlab.github.io/nivturk/) 
-
-[How to Serve NivTurk on Prolific](https://drive.google.com/file/d/1Dtugku1by3BDk2C_LGEBCi9RfB-Kxmdr/view) 
 
 [Stop signal lit review](https://www.notion.so/Stop-signal-lit-review-1f6cf00eb93680ee820ed7b365d590d7?pvs=21)
 
