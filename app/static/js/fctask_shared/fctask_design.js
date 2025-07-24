@@ -215,8 +215,8 @@ const relearnOne = [ // 4 CS- (candle), 6 CS+ (moon)
   csMinus,
   csPlus, 
   csPlus,
-  // csMinus, 
-  // csPlus
+  csMinus, 
+  csPlus
 ];
 
 const relearnOneAudio = [ // CS+ (moon) is reinforced 3
@@ -228,8 +228,8 @@ const relearnOneAudio = [ // CS+ (moon) is reinforced 3
   neutral,     // csMinus,
   neutral,     // csPlus, 
   neutral,     // csPlus,
-  // neutral,     // csMinus, 
-  // aversive1, // csPlus
+  neutral,     // csMinus, 
+  aversive1, // csPlus
 ];
 
 // Relearn Block 2
@@ -242,8 +242,8 @@ const relearnTwo = [ // 4 CS- (candle), 6 CS+ (moon)
   csMinus,
   csPlus, 
   csPlus,
-  // csMinus, 
-  // csPlus
+  csMinus, 
+  csPlus
 ];
 
 const relearnTwoAudio = [ // CS+ (moon) is reinforced 3
@@ -255,7 +255,7 @@ const relearnTwoAudio = [ // CS+ (moon) is reinforced 3
   neutral,     // csMinus,
   neutral,     // csMinus, 
   neutral,     // csPlus,
-  // aversive2, // csPlus, 
-  // neutral,     // csPlus
+  aversive2, // csPlus, 
+  neutral,     // csPlus
   ];
 
