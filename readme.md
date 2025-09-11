@@ -34,14 +34,6 @@ WARNING: This is a development server. Do not use it in a production deployment.
 http://127.0.0.1:9000/?PROLIFIC_PID=testuser #change 'testuser' to whatever ID
 ```
 
-If you’re not on a server, others can access this through
-
-```python
-http://YOUR_IP_ADDRESS:9000/?PROLIFIC_PID=testuser
-```
-
-If you’re on a server, change ‘YOUR_IP_ADDRESS” to the server address
-
 ## Timing
 
 Stop signal task: 
