@@ -93,7 +93,7 @@
     type: 'survey-multi-choice',
     questions: [
       {
-        prompt: "Do you have a headphone with you right now?", 
+        prompt: "Do you have headphones with you right now? (This is required for the experiment, if you select 'No' you can't complete the experiment.)", 
 		    name: 'headphone', 
 		    options: ['Yes', 'No'], 
         horizontal: true,
@@ -106,7 +106,7 @@
   var no_headphone_instruction = {
       type: "instructions",
       pages: [
-          `<br><p><b>Please continue the study later once you have headphone ready. You can close the tab now.</b></p><br>`,
+          `<br><p><b>Please continue the study later once you have headphones ready. You can close the tab now.</b></p><br>`,
       ],
       key_forward: 'j',
       post_trial_gap: 1000,
@@ -162,14 +162,14 @@
 
   // Initialize timeline.
   var timeline = [];
-  timeline = timeline.concat(recontact);
-  timeline = timeline.concat(NDA);
+  // timeline = timeline.concat(recontact);
+  // timeline = timeline.concat(NDA);
   timeline = timeline.concat(WELCOME);
-  // timeline = timeline.concat(headphone);
-  // timeline = timeline.concat(no_headphone);
+  timeline = timeline.concat(headphone);
+  timeline = timeline.concat(no_headphone);
   timeline = timeline.concat(TriggerWarning);
   timeline = timeline.concat(mhresources);
-  timeline = timeline.concat(CONTEXT);
+  // timeline = timeline.concat(CONTEXT);
 
   jsPsych.init({
     timeline: timeline,
