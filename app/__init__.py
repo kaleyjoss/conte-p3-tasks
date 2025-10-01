@@ -86,7 +86,7 @@ def index():
     )
 
     ## Define subject id.
-    info['subId'] = mapping.get(info['workerId'], gen_code(24))
+    info['subId'] = info['workerId']
     print(info['subId'])
 
     stage = get_worker(session['db_path'], info['workerId'])

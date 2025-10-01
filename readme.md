@@ -122,7 +122,7 @@ KJ 052725:
             workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata
             assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata
             hitId        = request.args.get('STUDY_ID'),        # Prolific metadata
-            subId        = gen_code(24),                        # NivTurk metadata
+            subId        = request.args.get('PROLIFIC_PID'),    # This used to be gencode(24), changed so that the data has the subject PID input instead of a random 24dig code
             address      = request.remote_addr,                 # NivTurk metadata
             user_agent   = request.user_agent.string,           # User metadata
             code_success = cfg['PROLIFIC'].get('CODE_SUCCESS', gen_code(8).upper()),
