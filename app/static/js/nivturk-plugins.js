@@ -32,7 +32,6 @@ function pass_message(experiment, msg) {
 
 function on_success(experiment) {
   console.log("on_success function called with experiment:", experiment);
-  console.log("on_success function called with experiment:", experiment);
   const payload = {
     experiment: experiment,
     data: jsPsych.data.get().json()

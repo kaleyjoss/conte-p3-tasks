@@ -28,10 +28,6 @@ const keyboardResponseInstructions = {
     predictions about the cards and the sounds you think they will make.
     <br><br>Other times, you will be asked to rate your feelings about the moon or candle cards.
     <br><br></p>`,
-    `<p style="padding: 0 200px">You will need to wear headphones to continue.
-	  Please make sure your left headphone is in the left ear and right 
-    headphone is in the right ear.
-    <br><br>`
 	],
 	allow_backward: false,
 	button_label_next: "Continue",
@@ -127,7 +123,7 @@ const triggerWarning = {
     <br>
     <div id="player"><audio controls><source src=${aversive3} type="audio/mpeg"></audio></div>
     <br><br>
-    <p style="padding:0 200px">If this may be intolerable for you, please return your submission on Prolific. Otherwise, please click Continue to proceed. 
+    <p style="padding:0 200px">If this may be intolerable for you, please exit the task and let the study team know. Otherwise, please click Continue to proceed. 
     </p><br><br>`
 	],
 	allow_backward: false,
